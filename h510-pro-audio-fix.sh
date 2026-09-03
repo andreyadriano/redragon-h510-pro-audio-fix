@@ -197,7 +197,14 @@ if [ "$WIREPLUMBER_AVAILABLE" = false ]; then
     echo "the 'only works at 100%' symptom on the analog profile when" >&2
     echo "adjusting volume from software." >&2
     echo
-    read -r -p "Continue anyway with steps 1-3 only? [y/N] " REPLY
+    # Read from /dev/tty explicitly: when this script runs via `curl | bash`,
+    # stdin is occupied by the piped script itself, not by the user's terminal.
+    if [ -r /dev/tty ]; then
+        read -r -p "Continue anyway with steps 1-3 only? [y/N] " REPLY </dev/tty
+    else
+        echo "No terminal available to confirm (non-interactive run); aborting." >&2
+        exit 1
+    fi
     case "$REPLY" in
         [yY][eE][sS]|[yY]) ;;
         *) echo "Aborted."; exit 1 ;;
