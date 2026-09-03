@@ -1,6 +1,8 @@
 # Redragon H510-PRO — Linux volume fix
 
-**Everything here was done by Claude. It worked for me. Run it on your own risk.**
+**Everything here was done by Claude. Run it on your own risk!**
+
+Tested on Fedora Workstation 43.
 
 Fixes the Redragon H510-PRO (2.4GHz dongle) only producing audio at 100%
 volume, and going silent when switching between analog and S/PDIF
