@@ -221,9 +221,10 @@ echo "==> 1/5: Creating $SYSTEM_SCRIPT"
 
 cat > "$SYSTEM_SCRIPT" << SCRIPT_EOF
 #!/bin/bash
-# Locks the H510-PRO's hardware volume (PCM,0 and PCM,1) with retries,
-# since this dongle's USB mixer takes a moment to become ready after the
-# udev 'add' event.
+# Locks the H510-PRO's hardware volume (PCM,0 and PCM,1) at 100% and unmuted,
+# with retries, since this dongle's USB mixer takes a moment to become ready
+# after the udev 'add' event. PCM,1 is a second playback volume control that
+# can come up at 0, leaving one channel silent if only its switch is enabled.
 
 CARD_NAME="${CARD_MATCH_NAME}"
 MAX_ATTEMPTS=10
@@ -235,7 +236,7 @@ for i in \$(seq 1 "\$MAX_ATTEMPTS"); do
 
     if [ -n "\$CARD_NUM" ]; then
         if "\$AMIXER" -c "\$CARD_NUM" sset 'PCM',0 100% unmute >/dev/null 2>&1 \\
-           && "\$AMIXER" -c "\$CARD_NUM" sset 'PCM',1 on >/dev/null 2>&1; then
+           && "\$AMIXER" -c "\$CARD_NUM" sset 'PCM',1 100% unmute >/dev/null 2>&1; then
             logger -t h510-volume-fix "Volume set successfully on card \$CARD_NUM (attempt \$i)"
             exit 0
         fi
